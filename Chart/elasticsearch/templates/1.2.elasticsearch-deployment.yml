@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ template "app.fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "app.fullname" . }}
+  replicas: {{ .Values.app.replicas }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "app.fullname" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-app
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+#          command: ['/bin/sh', '-c', 'while true; do echo hello; sleep 10;done']
+{{- if .Values.app.resources }}
+          resources:
+{{ toYaml .Values.app.resources | indent 12 }}
+{{- end }}
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: node.name
+              value: es01
+            - name: cluster.name
+              value: {{ .Release.Name }}-elasticsearch
+            - name: bootstrap.memory_lock
+              value: "true"
+            - name: ES_JAVA_OPTS
+              value: "-Xms512m -Xmx512m"
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "app.fullname" . }}
+                  key: elasticsearch-password
+          ports:
+            - name: port-9200
+              containerPort: 9200
+              protocol: TCP
+            - name: port-9300
+              containerPort: 9300
+              protocol: TCP
+        #  livenessProbe:
+        #    tcpSocket:
+        #      port: 9200
+        #    initialDelaySeconds: 300
+        #    timeoutSeconds: 10

@@ -1,0 +1,10 @@
+apiVersion: v1
+home: https://www.elastic.co/
+description: A Elasticsearch Helm chart for Kubernetes. Idea and docker images are taken from Bitnami.
+name: elasticsearch
+version: 1.0
+sources:
+  - https://github.com/kubic-project/caasp-services/tree/master/contrib/helm-charts/Portus
+maintainers:
+  - name: Actonica Containers Team
+    email: company@actonica.ru

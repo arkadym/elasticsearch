@@ -1,0 +1,37 @@
+{{- if .Values.elasticsearch.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "elasticsearch.fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.elasticsearch.service.type }}
+  ports:
+    - port: {{ .Values.elasticsearch.service.port1 | default "9200" }}
+      targetPort: es-9200
+      protocol: TCP
+  selector:
+    app: {{ template "elasticsearch.fullname" . }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "elasticsearch.fullname" . }}-9300
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.elasticsearch.service.type }}
+  ports:
+    - port: {{ .Values.elasticsearch.service.port2 | default "9300" }}
+      targetPort: es-9300
+      protocol: TCP
+  selector:
+    app: {{ template "elasticsearch.fullname" . }}
+{{- end }}
