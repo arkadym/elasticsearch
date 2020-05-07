@@ -15,4 +15,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build Docker --tag arkadym/elasticsearch-nextcloud:$(date +%s)
+      env:
+        DOCKER_IMAGE: arkadym/elasticsearch-nextcloud
+        DOCKER_ID: ${{ secrets.DOCKER_ID }}
+        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+      run: |
+        TAG=$(date +%s)
+        docker build Docker --tag $DOCKER_IMAGE:$TAG
+        docker login -u $DOCKER_ID -p $DOCKER_TOKEN
+        docker push $DOCKER_IMAGE:$TAG
