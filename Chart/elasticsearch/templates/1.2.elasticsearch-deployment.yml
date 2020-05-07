@@ -32,23 +32,23 @@ spec:
             - name: discovery.type
               value: single-node
             - name: node.name
-              value: es01
+              value: {{ (.Values.app.nodeName | default "es01") | quote }}
             - name: cluster.name
-              value: {{ .Release.Name }}-elasticsearch
+              value: {{ (.Values.app.clusterName | default (printf "%s-elasticsearch" .Release.Name)) | quote }}
             - name: bootstrap.memory_lock
               value: "true"
             - name: ES_JAVA_OPTS
-              value: "-Xms512m -Xmx512m"
+              value: {{ (.Values.app.javaOpts | default "-Xms512m -Xmx512m") | quote }}
             - name: ELASTIC_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "app.fullname" . }}
                   key: elasticsearch-password
           ports:
-            - name: port-9200
+            - name: es-http
               containerPort: 9200
               protocol: TCP
-            - name: port-9300
+            - name: es-transport
               containerPort: 9300
               protocol: TCP
         #  livenessProbe:

@@ -9,6 +9,9 @@ app:
 
   ## options
 #  password: "not-a-password"
+#  clusterName: ""
+#  nodeName: ""
+#  javaOpts: ""
 
   ## image configuration.
   ##
@@ -28,10 +31,7 @@ app:
   ## Service configuration.
   ##
   service:
-    - type: "ClusterIP"
-      targetPort: "es-9200"
-      port: "9200"
-    - type: "ClusterIP"
-      targetPort: "es-9300"
-      port: "9300"
+    type: "ClusterIP"
+#    httpPort: "9200"
+#    transportPort: "9300"
       
