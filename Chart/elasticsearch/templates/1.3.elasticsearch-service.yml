@@ -1,20 +1,21 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "app.fullname" . }}
+  name: {{ template "elasticsearch.fullname" . }}
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.app.service.type }}
+  type: {{ .Values.elasticsearch.service.type }}
   ports:
-    - port: {{ .Values.app.service.httpPort | default "9200" }}
+    - port: {{ .Values.elasticsearch.service.httpPort | default "9200" }}
       targetPort: es-http
       protocol: TCP
-    - port: {{ .Values.app.service.transportPort | default "9300" }}
+    - port: {{ .Values.elasticsearch.service.transportPort | default "9300" }}
       targetPort: es-transport
       protocol: TCP
   selector:
-    app: {{ template "app.fullname" . }}
+    app: {{ template "name" . }}
+    release: {{ .Release.Name }}

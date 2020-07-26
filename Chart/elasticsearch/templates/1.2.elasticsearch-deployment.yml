@@ -1,7 +1,7 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: {{ template "app.fullname" . }}
+  name: {{ template "elasticsearch.fullname" . }}
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -10,39 +10,41 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "app.fullname" . }}
-  replicas: {{ .Values.app.replicas }}
+      app: {{ template "name" . }}
+      release: {{ .Release.Name }}
+  replicas: {{ .Values.elasticsearch.replicas }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ template "app.fullname" . }}
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
     spec:
       containers:
         - name: {{ .Chart.Name }}-app
-          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
-          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          image: "{{ .Values.elasticsearch.image.repository }}:{{ .Values.elasticsearch.image.tag }}"
+          imagePullPolicy: {{ .Values.elasticsearch.image.pullPolicy }}
 #          command: ['/bin/sh', '-c', 'while true; do echo hello; sleep 10;done']
-{{- if .Values.app.resources }}
+{{- if .Values.elasticsearch.resources }}
           resources:
-{{ toYaml .Values.app.resources | indent 12 }}
+{{ toYaml .Values.elasticsearch.resources | indent 12 }}
 {{- end }}
           env:
             - name: discovery.type
               value: single-node
             - name: node.name
-              value: {{ (.Values.app.nodeName | default "es01") | quote }}
+              value: {{ (.Values.elasticsearch.nodeName | default "es01") | quote }}
             - name: cluster.name
-              value: {{ (.Values.app.clusterName | default (printf "%s-elasticsearch" .Release.Name)) | quote }}
+              value: {{ (.Values.elasticsearch.clusterName | default (printf "%s-elasticsearch" .Release.Name)) | quote }}
             - name: bootstrap.memory_lock
               value: "true"
             - name: ES_JAVA_OPTS
-              value: {{ (.Values.app.javaOpts | default "-Xms512m -Xmx512m") | quote }}
+              value: {{ (.Values.elasticsearch.javaOpts | default "-Xms512m -Xmx512m") | quote }}
             - name: ELASTIC_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "app.fullname" . }}
+                  name: {{ template "elasticsearch.fullname" . }}
                   key: elasticsearch-password
           ports:
             - name: es-http
