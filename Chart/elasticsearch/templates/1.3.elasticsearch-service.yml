@@ -10,10 +10,12 @@ metadata:
 spec:
   type: {{ .Values.elasticsearch.service.type }}
   ports:
-    - port: {{ .Values.elasticsearch.service.httpPort | default "9200" }}
+    - name: es-http
+      port: {{ .Values.elasticsearch.service.httpPort | default "9200" }}
       targetPort: es-http
       protocol: TCP
-    - port: {{ .Values.elasticsearch.service.transportPort | default "9300" }}
+    - name: es-transport
+      port: {{ .Values.elasticsearch.service.transportPort | default "9300" }}
       targetPort: es-transport
       protocol: TCP
   selector:
