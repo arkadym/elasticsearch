@@ -1,37 +1,36 @@
-## Default values for Redmine Helm Chart.
+## Default values for Elastic Helm Chart.
 ## This is a YAML-formatted file.
 ## Declare variables to be passed into your templates.
 
-## Default values for Redmine
+## Default values for Elastic
 ##
-elasticsearch:
-  replicas: 1
+replicas: 1
 
-  ## options
-#  password: "not-a-password"
-#  clusterName: ""
-#  nodeName: ""
-#  javaOpts: ""
+## image configuration.
+##
+image:
+  repository: "arkadym/elasticsearch-nextcloud"
+  tag: "7.6.0"
+  pullPolicy: "IfNotPresent"
 
-  ## image configuration.
-  ##
-  image:
-    repository: "arkadym/elasticsearch-nextcloud"
-    tag: "7.6.0"
-    pullPolicy: "IfNotPresent"
+## options
+password: "not-a-password"
+clusterName: "cluster1"
+nodeName: "node1"
+javaOpts: ""
 
-  resources:
-    requests:
-      memory: "256Mi"
-      cpu: "300m"
-    limits:
-      memory: "1Gi"
-      cpu: "1"
-      
-  ## Service configuration.
-  ##
-  service:
-    type: "ClusterIP"
-#    httpPort: "9200"
-#    transportPort: "9300"
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "300m"
+  limits:
+    memory: "1Gi"
+    cpu: "1"
+    
+## Service configuration.
+##
+service:
+  type: "ClusterIP"
+#  httpPort: "9200"
+#  transportPort: "9300"
       

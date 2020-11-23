@@ -12,7 +12,7 @@ spec:
     matchLabels:
       app: {{ template "name" . }}
       release: {{ .Release.Name }}
-  replicas: {{ .Values.elasticsearch.replicas }}
+  replicas: {{ .Values.replicas }}
   strategy:
     type: Recreate
   template:
@@ -23,24 +23,24 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}-app
-          image: "{{ .Values.elasticsearch.image.repository }}:{{ .Values.elasticsearch.image.tag }}"
-          imagePullPolicy: {{ .Values.elasticsearch.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 #          command: ['/bin/sh', '-c', 'while true; do echo hello; sleep 10;done']
-{{- if .Values.elasticsearch.resources }}
+{{- if .Values.resources }}
           resources:
-{{ toYaml .Values.elasticsearch.resources | indent 12 }}
+{{ toYaml .Values.resources | indent 12 }}
 {{- end }}
           env:
             - name: discovery.type
               value: single-node
             - name: node.name
-              value: {{ (.Values.elasticsearch.nodeName | default "es01") | quote }}
+              value: {{ (.Values.nodeName | default "es01") | quote }}
             - name: cluster.name
-              value: {{ (.Values.elasticsearch.clusterName | default (printf "%s-elasticsearch" .Release.Name)) | quote }}
+              value: {{ (.Values.clusterName | default (printf "%s-elasticsearch" .Release.Name)) | quote }}
             - name: bootstrap.memory_lock
               value: "true"
             - name: ES_JAVA_OPTS
-              value: {{ (.Values.elasticsearch.javaOpts | default "-Xms512m -Xmx512m") | quote }}
+              value: {{ (.Values.javaOpts | default "-Xms512m -Xmx512m") | quote }}
             - name: ELASTIC_PASSWORD
               valueFrom:
                 secretKeyRef:
