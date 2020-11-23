@@ -53,8 +53,19 @@ spec:
             - name: es-transport
               containerPort: 9300
               protocol: TCP
+{{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+{{- end }}
         #  livenessProbe:
         #    tcpSocket:
         #      port: 9200
         #    initialDelaySeconds: 300
         #    timeoutSeconds: 10
+{{- if .Values.persistence.enabled }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "elasticsearch.fullname" .) }}
+{{- end }}

@@ -2,7 +2,7 @@ apiVersion: v1
 home: https://github.com/arkadym/elasticsearch
 description: A Elasticsearch Helm chart for Kubernetes. Idea and docker images are taken from Bitnami.
 name: elasticsearch
-version: 1.4
+version: 1.5
 sources:
   - https://github.com/arkadym/elasticsearch/tree/master/Chart/elasticsearch
 maintainers:

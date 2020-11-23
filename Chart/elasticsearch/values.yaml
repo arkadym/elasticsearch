@@ -19,6 +19,18 @@ clusterName: "cluster1"
 nodeName: "node1"
 javaOpts: ""
 
+## persistent store for files
+## pvc - Use k8s persistent volume
+## - existingClaim - (non empty) use existing volume, other values are ignored
+## - accessMode, size, storageClass (existingClaim must be empty) - create new claim with auto provision
+## - storageClass - put "-" for empty (will use default configured by k8s)
+persistence:
+  enabled: true
+  accessMode: "ReadWriteMany"
+  size: "20Gi"
+#  storageClass: "-"
+#  existingClaim: "nextcloud-data"
+
 resources:
   requests:
     memory: "256Mi"
