@@ -1,0 +1,1 @@
+helm template elasticsearch -f elasticsearch\values.yaml -n default > template.yaml
